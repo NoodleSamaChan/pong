@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = "4.5.4"
+clap = { version = "4.5.2", features = ["derive"] }
 minifb = "0.25.0"
 rand = "0.8.5"
 window_rs = {git = "https://github.com/NoodleSamaChan/window_rs"}
