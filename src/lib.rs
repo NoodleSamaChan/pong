@@ -96,9 +96,18 @@ impl World {
 }
 
 pub fn creation_pongs (world: &mut World, buffer: WindowBuffer) {
-    let x_middle_point = buffer.width() / 2;
     let y_middle_point = buffer.height() / 2;
 
     world.player_1_pong.push((0, y_middle_point));
+    world.player_1_pong.push((0, y_middle_point - 1));
+    world.player_1_pong.push((0, y_middle_point - 2));
+    world.player_1_pong.push((0, y_middle_point - 3));
+    world.player_1_pong.push((0, y_middle_point - 4));
 
+    world.player_2_pong.push((buffer.width(), y_middle_point));
+    world.player_2_pong.push((buffer.width(), y_middle_point - 1));
+    world.player_2_pong.push((buffer.width(), y_middle_point - 2));
+    world.player_2_pong.push((buffer.width(), y_middle_point - 3));
+    world.player_2_pong.push((buffer.width(), y_middle_point - 4));
+    
 }
