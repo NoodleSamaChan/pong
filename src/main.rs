@@ -1,4 +1,8 @@
-use lib:: World;
+use lib::{World, Cli};
+use std::time::{Duration, Instant};
+use window_rs::WindowBuffer;
+use minifb::{Key, KeyRepeat, Window, WindowOptions};
+use clap::{Parser, ValueEnum};
 
 fn main() -> std::io::Result<()> {
     let cli = Cli::parse();
