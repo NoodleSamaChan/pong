@@ -14,3 +14,6 @@ window_rs = {git = "https://github.com/NoodleSamaChan/window_rs"}
 [dev-dependencies]
 insta = "1.38.0"
 proptest = "1.4.0"
+
+[lib]
+name = "pong"

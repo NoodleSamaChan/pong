@@ -32,13 +32,13 @@ pub struct Cli {
     /// Optional name to operate on
 
     #[arg(long)]
-    file_path: Option<String>,
+    pub file_path: Option<String>,
     #[arg(long, default_value_t = 120)]
-    ball_speed: usize,
+    pub ball_speed: usize,
     #[arg(long, default_value_t = Difficulty::Medium)]
-    difficulty: Difficulty,
+    pub difficulty: Difficulty,
     #[arg(long, default_value_t = false)]
-    handicap: bool,
+    pub handicap: bool,
 }
 //CLI END
 
@@ -95,19 +95,29 @@ impl World {
     }
 }
 
-pub fn creation_pongs (world: &mut World, buffer: WindowBuffer) {
+pub fn creation_pongs (world: &mut World, buffer: &WindowBuffer) {
     let y_middle_point = buffer.height() / 2;
 
-    world.player_1_pong.push((0, y_middle_point));
-    world.player_1_pong.push((0, y_middle_point - 1));
-    world.player_1_pong.push((0, y_middle_point - 2));
-    world.player_1_pong.push((0, y_middle_point - 3));
-    world.player_1_pong.push((0, y_middle_point - 4));
-
-    world.player_2_pong.push((buffer.width(), y_middle_point));
-    world.player_2_pong.push((buffer.width(), y_middle_point - 1));
-    world.player_2_pong.push((buffer.width(), y_middle_point - 2));
-    world.player_2_pong.push((buffer.width(), y_middle_point - 3));
-    world.player_2_pong.push((buffer.width(), y_middle_point - 4));
+    for x in 0..11 {
+        world.player_1_pong.push((0, y_middle_point - x));
+        world.player_2_pong.push((buffer.width() - 1, y_middle_point - x));
+    }
     
+}
+
+pub fn display(world: &World, buffer: &mut WindowBuffer, cli: &Cli) {
+    buffer.reset();
+    world
+        .player_1_pong
+        .iter()
+        .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = rgb(0, 0, u8::MAX));
+
+    world
+        .player_2_pong
+        .iter()
+        .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = rgb(0, u8::MAX, 0));
+
+
+    buffer[world.ball] = rgb(u8::MAX, 0, 0);
+
 }
