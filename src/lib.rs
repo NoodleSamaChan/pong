@@ -98,7 +98,7 @@ impl World {
 pub fn creation_pongs (world: &mut World, buffer: &WindowBuffer) {
     let y_middle_point = buffer.height() / 2;
 
-    for x in 0..11 {
+    for x in 0..10 {
         world.player_1_pong.push((0, y_middle_point - x));
         world.player_2_pong.push((buffer.width() - 1, y_middle_point - x));
     }
