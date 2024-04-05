@@ -105,7 +105,7 @@ pub fn creation_pongs (world: &mut World, buffer: &WindowBuffer) {
     
 }
 
-pub fn display(world: &World, buffer: &mut WindowBuffer, cli: &Cli) {
+pub fn display(world: &World, buffer: &mut WindowBuffer) {
     buffer.reset();
     world
         .player_1_pong

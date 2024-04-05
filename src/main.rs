@@ -41,7 +41,7 @@ fn main() -> std::io::Result<()> {
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
         //let _ = game_elements.handle_user_input(&window, &cli, &buffer);
-        display(&game_elements, &mut buffer, &cli);
+        display(&game_elements, &mut buffer);
 
 
 

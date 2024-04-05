@@ -16,7 +16,6 @@ mod test {
 
     #[test]
     fn pong_generation() {
-        let cli = pong::Cli::parse();
         let mut buffer: WindowBuffer = WindowBuffer::new(5, 20);
 
         let mut game_elements: World = pong::World::new(
@@ -28,11 +27,11 @@ mod test {
         false,
         Instant::now(),
         0,
-        cli.ball_speed, 
+        120, 
         );
 
         creation_pongs(&mut game_elements, &buffer);
-        display(&game_elements, &mut buffer, &cli);
+        display(&game_elements, &mut buffer);
 
         assert_snapshot!(
             buffer.to_string(),
