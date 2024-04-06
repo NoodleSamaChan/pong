@@ -46,6 +46,8 @@ pub struct Cli {
     pub difficulty: Difficulty,
     #[arg(long, default_value_t = false)]
     pub handicap: bool,
+    #[arg(long, default_value_t = 10)]
+    pub number_of_points_to_reach: usize,
 }
 //CLI END
 
@@ -67,8 +69,8 @@ pub fn rgb(red: u8, green: u8, blue: u8) -> u32 {
 pub struct World {
     player_1_pong: Vec<(usize, usize)>,
     player_2_pong: Vec<(usize, usize)>,
-    player_1_score: usize,
-    player_2_score: usize,
+    pub player_1_score: usize,
+    pub player_2_score: usize,
     player_1_direction: Direction,
     player_2_direction: Direction,
     ball: (usize, usize),
@@ -185,5 +187,9 @@ pub fn display(world: &World, buffer: &mut WindowBuffer) {
 
 
     buffer[world.ball] = rgb(u8::MAX, 0, 0);
-
+    if (world.player_1_score as isize - world.player_2_score as isize == 2) || (world.player_1_score as isize - world.player_2_score as isize == (-2)) {
+        buffer[world.ball] = rgb(100, 100, 0);
+    } else if (world.player_1_score as isize - world.player_2_score as isize >= 4) || (world.player_1_score as isize - world.player_2_score as isize <= (-4)) {
+        buffer[world.ball] = rgb(75, 75, 75);
+    }
 }

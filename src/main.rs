@@ -29,6 +29,8 @@ fn main() -> std::io::Result<()> {
         Vec::new(),
         0,
         0,
+        pong::Direction::Still,
+        pong::Direction::Still,
         (buffer.width() / 2, buffer.height() / 2),
         false,
         Instant::now(),
@@ -40,14 +42,17 @@ fn main() -> std::io::Result<()> {
     creation_pongs(&mut game_elements, &buffer);
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        //let _ = game_elements.handle_user_input(&window, &cli, &buffer);
-        display(&game_elements, &mut buffer);
+        while game_elements.player_1_score <= cli.number_of_points_to_reach || game_elements.player_2_score <= cli.number_of_points_to_reach {
+            let _ = game_elements.handle_user_input(&window, &cli, &buffer);
+            display(&game_elements, &mut buffer);
 
 
 
-        window
-            .update_with_buffer(&buffer.buffer(), buffer.width(), buffer.height())
-            .unwrap();
+            window
+                .update_with_buffer(&buffer.buffer(), buffer.width(), buffer.height())
+                .unwrap();
+
+        }
     }
     Ok(())
 }
