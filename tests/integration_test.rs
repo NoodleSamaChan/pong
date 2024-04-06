@@ -23,7 +23,7 @@ mod test {
         Vec::new(),
         0,
         0,
-        (0, 0),
+        (buffer.width() / 2, buffer.height() / 2),
         false,
         Instant::now(),
         0,
@@ -36,7 +36,7 @@ mod test {
         assert_snapshot!(
             buffer.to_string(),
             @r###"
-        #....
+        .....
         #...#
         #...#
         #...#
@@ -46,7 +46,7 @@ mod test {
         #...#
         #...#
         #...#
-        #...#
+        #.#.#
         .....
         .....
         .....

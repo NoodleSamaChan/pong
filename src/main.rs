@@ -29,7 +29,7 @@ fn main() -> std::io::Result<()> {
         Vec::new(),
         0,
         0,
-        (0, 0),
+        (buffer.width() / 2, buffer.height() / 2),
         false,
         Instant::now(),
         0,

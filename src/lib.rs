@@ -15,6 +15,13 @@ pub enum Difficulty {
     Hard,
 }
 
+#[derive(PartialEq)]
+pub enum Direction {
+    North,
+    South,
+    Still,
+}
+
 impl fmt::Display for Difficulty {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -62,6 +69,8 @@ pub struct World {
     player_2_pong: Vec<(usize, usize)>,
     player_1_score: usize,
     player_2_score: usize,
+    player_1_direction: Direction,
+    player_2_direction: Direction,
     ball: (usize, usize),
     finished: bool,
     small_break_timer: Instant,
@@ -75,6 +84,8 @@ impl World {
         player_2_pong: Vec<(usize, usize)>,
         player_1_score: usize,
         player_2_score: usize,
+        player_1_direction: Direction,
+        player_2_direction: Direction,
         ball: (usize, usize),
         finished: bool,
         small_break_timer: Instant,
@@ -86,12 +97,67 @@ impl World {
             player_2_pong,
             player_1_score,
             player_2_score,
+            player_1_direction,
+            player_2_direction,
             ball,
             finished,
             small_break_timer,
             space_count,
             game_speed,
         }
+    }
+
+    pub fn reset(&mut self, buffer: &WindowBuffer) {
+        self.player_1_score = 0;
+        self.player_2_score = 0;
+        creation_pongs(self, buffer);
+        self.player_1_direction = Direction::Still;
+        self.player_2_direction = Direction::Still;
+        self.ball = (buffer.width() / 2, buffer.height() / 2);
+        self.finished = false;
+        self.space_count = self.space_count;
+    }
+
+    pub fn handle_user_input(
+        &mut self,
+        window: &Window,
+        cli: &Cli,
+        buffer: &WindowBuffer,
+    ) -> std::io::Result<()> {
+        if window.is_key_pressed(Key::Q, KeyRepeat::No) {
+            self.reset(buffer);
+        }
+
+        if window.is_key_pressed(Key::E, KeyRepeat::Yes) {
+            self.player_1_direction = Direction::North;
+        }
+
+        if window.is_key_pressed(Key::D, KeyRepeat::Yes) {
+            self.player_1_direction = Direction::South;
+        }
+
+        if window.is_key_pressed(Key::O, KeyRepeat::Yes) {
+            self.player_2_direction = Direction::North;
+        }
+
+        if window.is_key_pressed(Key::K, KeyRepeat::Yes) {
+            self.player_2_direction = Direction::South;
+        }
+
+        let small_break = Duration::from_millis(0);
+        if self.small_break_timer.elapsed() >= small_break {
+            window.get_keys_released().iter().for_each(|key| match key {
+                Key::Space => self.space_count += 1,
+                _ => (),
+            });
+            self.small_break_timer = Instant::now();
+        }
+
+        Ok(())
+    }
+
+    pub fn pong_direction(&mut self) {
+        todo!()
     }
 }
 
