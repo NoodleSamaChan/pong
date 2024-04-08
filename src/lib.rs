@@ -71,8 +71,8 @@ pub struct World {
     player_2_pong: Vec<(usize, usize)>,
     pub player_1_score: usize,
     pub player_2_score: usize,
-    player_1_direction: Direction,
-    player_2_direction: Direction,
+    pub player_1_direction: Direction,
+    pub player_2_direction: Direction,
     ball: (usize, usize),
     finished: bool,
     small_break_timer: Instant,
@@ -146,6 +146,10 @@ impl World {
             self.player_2_direction = Direction::South;
         }
 
+        if window.is_key_pressed(Key::W, KeyRepeat::Yes) {
+            self.finished = false;
+        }
+
         let small_break = Duration::from_millis(0);
         if self.small_break_timer.elapsed() >= small_break {
             window.get_keys_released().iter().for_each(|key| match key {
@@ -158,8 +162,66 @@ impl World {
         Ok(())
     }
 
-    pub fn pong_direction(&mut self) {
-        todo!()
+    pub fn pong_1_direction(&mut self, buffer: &WindowBuffer) {
+        let top = self.player_1_pong[0];
+        let bottom = self.player_1_pong[self.player_1_pong.len() - 1];
+        match self.player_1_direction {
+            Direction::North => {
+                if buffer.get(top.0 as isize, top.1 as isize - 1) != None{
+                    println!("this is north");
+                    self.player_1_pong.iter_mut().for_each(|(x, y)| *y -= 1);
+                } else {
+                    println!("I'm in the else");
+                    self.player_1_direction = Direction::Still;
+                    self.player_1_pong = self.player_1_pong.clone();
+                }
+            }
+            Direction::South => {
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None{
+                    println!("this is south");
+                    self.player_1_pong.iter_mut().for_each(|(x, y)| *y += 1);
+                } else {
+                    println!("I'm in the else");
+                    self.player_1_direction = Direction::Still;
+                    self.player_1_pong = self.player_1_pong.clone();
+                }
+            } 
+            Direction::Still => {
+                self.player_1_pong = self.player_1_pong.clone();
+                println!("I'm in the else of still");
+            }
+        }
+    }
+
+    pub fn pong_2_direction(&mut self, buffer: &WindowBuffer) {
+        let top = self.player_2_pong[0];
+        let bottom = self.player_2_pong[self.player_2_pong.len() - 1];
+        match self.player_2_direction {
+            Direction::North => {
+                if buffer.get(top.0 as isize, top.1 as isize - 1) != None{
+                    self.player_2_pong.iter_mut().for_each(|(x, y)| *y -= 1);
+                } else {
+                    self.player_2_pong = self.player_2_pong.clone();
+                }
+            }
+            Direction::South => {
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None{
+                    self.player_2_pong.iter_mut().for_each(|(x, y)| *y += 1);
+                } else {
+                    self.player_2_pong = self.player_2_pong.clone();
+                }
+            }
+            Direction::Still => {
+                self.player_2_pong = self.player_2_pong.clone();
+            }
+        }
+    }
+
+    pub fn update(&mut self, buffer: &mut WindowBuffer) {
+        if self.space_count % 2 == 0 {
+            self.pong_1_direction(buffer);
+            self.pong_2_direction(buffer);
+        }
     }
 }
 
