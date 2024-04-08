@@ -22,6 +22,13 @@ pub enum Direction {
     Still,
 }
 
+#[derive(PartialEq)]
+pub enum BallDirection {
+    West,
+    East,
+    Still,
+}
+
 impl fmt::Display for Difficulty {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -73,7 +80,8 @@ pub struct World {
     pub player_2_score: usize,
     pub player_1_direction: Direction,
     pub player_2_direction: Direction,
-    ball: (usize, usize),
+    ball: Option<(usize, usize)>,
+    ball_direction: BallDirection,
     finished: bool,
     small_break_timer: Instant,
     space_count: usize,
@@ -88,7 +96,8 @@ impl World {
         player_2_score: usize,
         player_1_direction: Direction,
         player_2_direction: Direction,
-        ball: (usize, usize),
+        ball: Option<(usize, usize)>,
+        ball_direction: BallDirection,
         finished: bool,
         small_break_timer: Instant,
         space_count: usize,
@@ -102,6 +111,7 @@ impl World {
             player_1_direction,
             player_2_direction,
             ball,
+            ball_direction,
             finished,
             small_break_timer,
             space_count,
@@ -115,7 +125,7 @@ impl World {
         creation_pongs(self, buffer);
         self.player_1_direction = Direction::Still;
         self.player_2_direction = Direction::Still;
-        self.ball = (buffer.width() / 2, buffer.height() / 2);
+        self.ball = Some((buffer.width() / 2, buffer.height() / 2));
         self.finished = false;
         self.space_count = self.space_count;
     }
@@ -167,7 +177,7 @@ impl World {
         let bottom = self.player_1_pong[self.player_1_pong.len() - 1];
         match self.player_1_direction {
             Direction::North => {
-                if buffer.get(top.0 as isize, top.1 as isize - 1) != None{
+                if buffer.get(top.0 as isize, top.1 as isize - 1) != None {
                     println!("this is north");
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
@@ -177,7 +187,7 @@ impl World {
                 }
             }
             Direction::South => {
-                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None{
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None {
                     println!("this is south");
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
@@ -185,7 +195,7 @@ impl World {
                     self.player_1_direction = Direction::Still;
                     self.player_1_pong = self.player_1_pong.clone();
                 }
-            } 
+            }
             Direction::Still => {
                 self.player_1_pong = self.player_1_pong.clone();
                 println!("I'm in the else of still");
@@ -198,14 +208,14 @@ impl World {
         let bottom = self.player_2_pong[self.player_2_pong.len() - 1];
         match self.player_2_direction {
             Direction::North => {
-                if buffer.get(top.0 as isize, top.1 as isize - 1) != None{
+                if buffer.get(top.0 as isize, top.1 as isize - 1) != None {
                     self.player_2_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
                     self.player_2_pong = self.player_2_pong.clone();
                 }
             }
             Direction::South => {
-                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None{
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None {
                     self.player_2_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
                     self.player_2_pong = self.player_2_pong.clone();
@@ -213,6 +223,30 @@ impl World {
             }
             Direction::Still => {
                 self.player_2_pong = self.player_2_pong.clone();
+            }
+        }
+    }
+
+    pub fn ball_movement_start(&mut self, buffer: &mut WindowBuffer) {
+        let left_or_right = rand::thread_rng().gen_range(0..2);
+        
+        if let Some(ball) = &self.ball {
+            let checker_first_pong = self.player_1_pong.iter().any(|(a, b)| (a, b) == (&ball.0, &ball.1));
+            let checker_second_pong = self.player_2_pong.iter().any(|(a, b)| (a, b) == (&ball.0, &ball.1));
+            if left_or_right == 0 {
+                if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None && checker_first_pong == false {
+                    println!("this is north");
+                    self.ball.iter_mut().for_each(|(x, y)| *x -= 1);
+                } else if checker_first_pong == true {
+                    self.ball_direction = BallDirection::East;
+                }
+            } else {
+                if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None && checker_first_pong == false {
+                    println!("this is north");
+                    self.ball.iter_mut().for_each(|(x, y)| *x += 1);
+                } else if checker_first_pong == true {
+                    self.ball_direction = BallDirection::West;
+                }
             }
         }
     }
@@ -225,14 +259,15 @@ impl World {
     }
 }
 
-pub fn creation_pongs (world: &mut World, buffer: &WindowBuffer) {
+pub fn creation_pongs(world: &mut World, buffer: &WindowBuffer) {
     let y_middle_point = buffer.height() / 2;
 
     for x in 0..10 {
         world.player_1_pong.push((0, y_middle_point - x));
-        world.player_2_pong.push((buffer.width() - 1, y_middle_point - x));
+        world
+            .player_2_pong
+            .push((buffer.width() - 1, y_middle_point - x));
     }
-    
 }
 
 pub fn display(world: &World, buffer: &mut WindowBuffer) {
@@ -247,11 +282,19 @@ pub fn display(world: &World, buffer: &mut WindowBuffer) {
         .iter()
         .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = rgb(0, u8::MAX, 0));
 
+    if world.ball != None {
+        if let Some(ball) = &world.ball {
+            buffer[*ball] = rgb(u8::MAX, 0, 0);
 
-    buffer[world.ball] = rgb(u8::MAX, 0, 0);
-    if (world.player_1_score as isize - world.player_2_score as isize == 2) || (world.player_1_score as isize - world.player_2_score as isize == (-2)) {
-        buffer[world.ball] = rgb(100, 100, 0);
-    } else if (world.player_1_score as isize - world.player_2_score as isize >= 4) || (world.player_1_score as isize - world.player_2_score as isize <= (-4)) {
-        buffer[world.ball] = rgb(75, 75, 75);
+            if (world.player_1_score as isize - world.player_2_score as isize == 2)
+                || (world.player_1_score as isize - world.player_2_score as isize == (-2))
+            {
+                buffer[*ball] = rgb(100, 100, 0);
+            } else if (world.player_1_score as isize - world.player_2_score as isize >= 4)
+                || (world.player_1_score as isize - world.player_2_score as isize <= (-4))
+            {
+                buffer[*ball] = rgb(75, 75, 75);
+            }
+        }
     }
 }
