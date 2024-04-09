@@ -225,7 +225,7 @@ impl World {
         }
     }
 
-    pub fn ball_movement(&mut self, buffer: &mut WindowBuffer) {
+    pub fn ball_movement(&mut self, buffer: &mut WindowBuffer, cli: &Cli) {
         if let Some(ball) = &self.ball {
             let left_or_right = rand::thread_rng().gen_range(0..2);
             let ball_rebounce_direction = rand::thread_rng().gen_range(0..3);
@@ -253,7 +253,7 @@ impl World {
                         }
                     } else if ball == &(0, ball.1) {
                         self.player_2_score += 1;
-                        //New ball function
+                        creation_ball(self, buffer, cli)
                     }
                 }
                 BallDirection::NorthWest => {}
@@ -273,7 +273,7 @@ impl World {
                         }
                     } else if ball == &(buffer.width() - 1, ball.1) {
                         self.player_1_score += 1;
-                        //New ball function
+                        creation_ball(self, buffer, cli)
                     }
                 }
                 BallDirection::NorthEast => {}
