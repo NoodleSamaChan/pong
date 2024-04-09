@@ -25,7 +25,8 @@ mod test {
         0,
         pong::Direction::Still,
         pong::Direction::Still,
-        (buffer.width() / 2, buffer.height() / 2),
+        Some((buffer.width() / 2, buffer.height() / 2)),
+        pong::BallDirection::Still,
         false,
         Instant::now(),
         0,
@@ -74,7 +75,8 @@ mod test {
         0,
         pong::Direction::Still,
         pong::Direction::Still,
-        (buffer.width() / 2, buffer.height() / 2),
+        Some((buffer.width() / 2, buffer.height() / 2)),
+        pong::BallDirection::Still,
         false,
         Instant::now(),
         0,
@@ -218,5 +220,34 @@ mod test {
         .....
         "###
         );
+    }
+
+        #[test]
+    fn ball_launch() {
+        let mut buffer: WindowBuffer = WindowBuffer::new(15, 20);
+
+        let mut game_elements: World = pong::World::new(
+        Vec::new(),
+        Vec::new(),
+        0,
+        0,
+        pong::Direction::Still,
+        pong::Direction::Still,
+        Some((buffer.width() / 2, buffer.height() / 2)),
+        pong::BallDirection::Still,
+        false,
+        Instant::now(),
+        0,
+        120, 
+        );
+
+        creation_pongs(&mut game_elements, &buffer);
+        display(&game_elements, &mut buffer);
+
+        assert_snapshot!(
+            buffer.to_string(),
+            @r###""###
+        );
+
     }
 }

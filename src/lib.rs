@@ -173,39 +173,34 @@ impl World {
     }
 
     pub fn pong_1_direction(&mut self, buffer: &WindowBuffer) {
-        let top = self.player_1_pong[0];
-        let bottom = self.player_1_pong[self.player_1_pong.len() - 1];
+        let top = self.player_1_pong[self.player_1_pong.len() - 1];
+        let bottom = self.player_1_pong[0];
         match self.player_1_direction {
             Direction::North => {
                 if buffer.get(top.0 as isize, top.1 as isize - 1) != None {
-                    println!("this is north");
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
-                    println!("I'm in the else");
                     self.player_1_direction = Direction::Still;
                     self.player_1_pong = self.player_1_pong.clone();
                 }
             }
             Direction::South => {
                 if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None {
-                    println!("this is south");
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
-                    println!("I'm in the else");
                     self.player_1_direction = Direction::Still;
                     self.player_1_pong = self.player_1_pong.clone();
                 }
             }
             Direction::Still => {
                 self.player_1_pong = self.player_1_pong.clone();
-                println!("I'm in the else of still");
             }
         }
     }
 
     pub fn pong_2_direction(&mut self, buffer: &WindowBuffer) {
-        let top = self.player_2_pong[0];
-        let bottom = self.player_2_pong[self.player_2_pong.len() - 1];
+        let top = self.player_2_pong[self.player_2_pong.len() - 1];
+        let bottom = self.player_2_pong[0];
         match self.player_2_direction {
             Direction::North => {
                 if buffer.get(top.0 as isize, top.1 as isize - 1) != None {
@@ -235,14 +230,12 @@ impl World {
             let checker_second_pong = self.player_2_pong.iter().any(|(a, b)| (a, b) == (&ball.0, &ball.1));
             if left_or_right == 0 {
                 if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None && checker_first_pong == false {
-                    println!("this is north");
                     self.ball.iter_mut().for_each(|(x, y)| *x -= 1);
                 } else if checker_first_pong == true {
                     self.ball_direction = BallDirection::East;
                 }
             } else {
-                if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None && checker_first_pong == false {
-                    println!("this is north");
+                if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None && checker_second_pong == false {
                     self.ball.iter_mut().for_each(|(x, y)| *x += 1);
                 } else if checker_first_pong == true {
                     self.ball_direction = BallDirection::West;
