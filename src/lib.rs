@@ -1,5 +1,5 @@
 use clap::{Parser, ValueEnum};
-use minifb::{Key, KeyRepeat, Window, WindowOptions};
+use minifb::{Key, KeyRepeat, Window};
 use rand::Rng;
 use std::fmt;
 use std::fs::File;
@@ -25,7 +25,11 @@ pub enum Direction {
 #[derive(PartialEq)]
 pub enum BallDirection {
     West,
+    NorthWest,
+    SouthWest,
     East,
+    NorthEast,
+    SouthEast,
     Still,
 }
 
@@ -133,7 +137,6 @@ impl World {
     pub fn handle_user_input(
         &mut self,
         window: &Window,
-        cli: &Cli,
         buffer: &WindowBuffer,
     ) -> std::io::Result<()> {
         if window.is_key_pressed(Key::Q, KeyRepeat::No) {
@@ -222,23 +225,76 @@ impl World {
         }
     }
 
-    pub fn ball_movement_start(&mut self, buffer: &mut WindowBuffer) {
-        let left_or_right = rand::thread_rng().gen_range(0..2);
-        
+    pub fn ball_movement(&mut self, buffer: &mut WindowBuffer) {
         if let Some(ball) = &self.ball {
-            let checker_first_pong = self.player_1_pong.iter().any(|(a, b)| (a, b) == (&ball.0, &ball.1));
-            let checker_second_pong = self.player_2_pong.iter().any(|(a, b)| (a, b) == (&ball.0, &ball.1));
-            if left_or_right == 0 {
-                if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None && checker_first_pong == false {
-                    self.ball.iter_mut().for_each(|(x, y)| *x -= 1);
-                } else if checker_first_pong == true {
-                    self.ball_direction = BallDirection::East;
+            let left_or_right = rand::thread_rng().gen_range(0..2);
+            let ball_rebounce_direction = rand::thread_rng().gen_range(0..3);
+            let checker_first_pong = self
+                .player_1_pong
+                .iter()
+                .any(|(a, b)| (a, b) == (&ball.0, &ball.1));
+            let checker_second_pong = self
+                .player_2_pong
+                .iter()
+                .any(|(a, b)| (a, b) == (&ball.0, &ball.1));
+            match self.ball_direction {
+                BallDirection::West => {
+                    if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None
+                        && checker_second_pong == false
+                    {
+                        self.ball = Some((ball.0 - 1, ball.1));
+                    } else if checker_second_pong == true {
+                        if ball_rebounce_direction == 0 {
+                            self.ball_direction = BallDirection::East;
+                        } else if ball_rebounce_direction == 1 {
+                            self.ball_direction = BallDirection::NorthEast;
+                        } else {
+                            self.ball_direction = BallDirection::SouthEast;
+                        }
+                    } else if ball == &(0, ball.1) {
+                        self.player_2_score += 1;
+                        //New ball function
+                    }
                 }
-            } else {
-                if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None && checker_second_pong == false {
-                    self.ball.iter_mut().for_each(|(x, y)| *x += 1);
-                } else if checker_first_pong == true {
-                    self.ball_direction = BallDirection::West;
+                BallDirection::NorthWest => {}
+                BallDirection::SouthWest => {}
+                BallDirection::East => {
+                    if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None
+                        && checker_second_pong == false
+                    {
+                        self.ball = Some((ball.0 + 1, ball.1));
+                    } else if checker_second_pong == true {
+                        if ball_rebounce_direction == 0 {
+                            self.ball_direction = BallDirection::West;
+                        } else if ball_rebounce_direction == 1 {
+                            self.ball_direction = BallDirection::NorthWest;
+                        } else {
+                            self.ball_direction = BallDirection::SouthWest;
+                        }
+                    } else if ball == &(buffer.width() - 1, ball.1) {
+                        self.player_1_score += 1;
+                        //New ball function
+                    }
+                }
+                BallDirection::NorthEast => {}
+                BallDirection::SouthEast => {}
+
+                BallDirection::Still => {
+                    if left_or_right == 0 {
+                        if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None
+                            && checker_first_pong == false
+                        {
+                            self.ball = Some((ball.0 - 1, ball.1));
+                            self.ball_direction = BallDirection::West;
+                        }
+                    } else {
+                        if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None
+                            && checker_second_pong == false
+                        {
+                            self.ball = Some((ball.0 + 1, ball.1));
+                            self.ball_direction = BallDirection::East;
+                        }
+                    }
                 }
             }
         }
@@ -249,6 +305,14 @@ impl World {
             self.pong_1_direction(buffer);
             self.pong_2_direction(buffer);
         }
+    }
+}
+
+pub fn creation_ball(world: &mut World, buffer: &WindowBuffer, cli: &Cli) {
+    if world.player_1_score < cli.number_of_points_to_reach || world.player_2_score < cli.number_of_points_to_reach {
+        world.ball = Some((buffer.height() / 2, buffer.width() / 2))
+    } else {
+        println!("Game over! Score player 1 is {}, score player 2 is {}", world.player_1_score, world.player_2_score);
     }
 }
 
