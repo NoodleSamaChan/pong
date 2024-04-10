@@ -1,11 +1,15 @@
 #[cfg(test)]
 mod test {
     use super::*;
+    use pong::Cli;
     use pong::{rgb, creation_pongs, World, display};
     use insta::{assert_debug_snapshot, assert_snapshot};
     use std::time::Instant;
     use clap::{Parser, ValueEnum};
     use window_rs::WindowBuffer;
+    use rand::rngs::ThreadRng;
+    use rand::rngs::StdRng;
+    use rand::SeedableRng;
 
     #[test]
     fn test_rgb() {
@@ -31,6 +35,7 @@ mod test {
         Instant::now(),
         0,
         120, 
+        StdRng::seed_from_u64(75),
         );
 
         creation_pongs(&mut game_elements, &buffer);
@@ -66,6 +71,7 @@ mod test {
 
     #[test]
     fn pongs_movements() {
+        let cli = pong::Cli::parse();
         let mut buffer: WindowBuffer = WindowBuffer::new(5, 25);
 
         let mut game_elements: World = pong::World::new(
@@ -81,6 +87,7 @@ mod test {
         Instant::now(),
         0,
         120, 
+        StdRng::seed_from_u64(75),
         );
 
         creation_pongs(&mut game_elements, &buffer);
@@ -119,7 +126,7 @@ mod test {
 
         game_elements.player_1_direction = pong::Direction::North;
         game_elements.player_2_direction = pong::Direction::South;
-        game_elements.update(&mut buffer);
+        game_elements.update(&mut buffer, &cli);
         display(&game_elements, &mut buffer);
 
         assert_snapshot!(
@@ -153,7 +160,7 @@ mod test {
         "###
         );
 
-        game_elements.update(&mut buffer);
+        game_elements.update(&mut buffer, &cli);
         display(&game_elements, &mut buffer);
 
         assert_snapshot!(
@@ -187,7 +194,7 @@ mod test {
         "###
         );
 
-        game_elements.update(&mut buffer);
+        game_elements.update(&mut buffer, &cli);
         display(&game_elements, &mut buffer);
 
         assert_snapshot!(
@@ -223,8 +230,9 @@ mod test {
     }
 
         #[test]
-    fn ball_launch() {
-        let mut buffer: WindowBuffer = WindowBuffer::new(15, 20);
+    fn ball_launch_right() {
+        let cli = pong::Cli::parse();
+        let mut buffer: WindowBuffer = WindowBuffer::new(15, 10);
 
         let mut game_elements: World = pong::World::new(
         Vec::new(),
@@ -239,15 +247,85 @@ mod test {
         Instant::now(),
         0,
         120, 
+        StdRng::seed_from_u64(75),
         );
 
-        creation_pongs(&mut game_elements, &buffer);
+        game_elements.ball_movement(&mut buffer, &cli);
         display(&game_elements, &mut buffer);
 
         assert_snapshot!(
             buffer.to_string(),
-            @r###""###
+            @r###"
+        ...............
+        ...............
+        ...............
+        ...............
+        ...............
+        ........#......
+        ...............
+        ...............
+        ...............
+        ...............
+        "###
+        );
+
+        game_elements.ball_movement(&mut buffer, &cli);
+        display(&game_elements, &mut buffer);
+
+        assert_snapshot!(
+            buffer.to_string(),
+            @r###"
+        ...............
+        ...............
+        ...............
+        ...............
+        ...............
+        .........#.....
+        ...............
+        ...............
+        ...............
+        ...............
+        "###
+        );
+
+        game_elements.ball_movement(&mut buffer, &cli);
+        display(&game_elements, &mut buffer);
+
+        assert_snapshot!(
+            buffer.to_string(),
+            @r###"
+        ...............
+        ...............
+        ...............
+        ...............
+        ...............
+        ..........#....
+        ...............
+        ...............
+        ...............
+        ...............
+        "###
+        );
+
+        game_elements.ball_movement(&mut buffer, &cli);
+        display(&game_elements, &mut buffer);
+
+        assert_snapshot!(
+            buffer.to_string(),
+            @r###"
+        ...............
+        ...............
+        ...............
+        ...............
+        ...............
+        ...........#...
+        ...............
+        ...............
+        ...............
+        ...............
+        "###
         );
 
     }
+    
 }

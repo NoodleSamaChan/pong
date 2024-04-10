@@ -6,7 +6,7 @@ use std::fs::File;
 use std::io::{Read, Write};
 use std::time::{Duration, Instant};
 use window_rs::WindowBuffer;
-use rand::rngs::{StdRng};
+use rand::rngs::StdRng;
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug, Default)]
 pub enum Difficulty {
@@ -108,7 +108,7 @@ impl World {
         small_break_timer: Instant,
         space_count: usize,
         game_speed: usize,
-        rng: ThreadRng,
+        rng: StdRng,
     ) -> Self {
         Self {
             player_1_pong,
@@ -244,15 +244,16 @@ impl World {
             match self.ball_direction {
                 BallDirection::West => {
                     if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None
-                        && checker_second_pong == false
+                        && checker_first_pong == false
                     {
                         if ball == &(0, ball.1) {
                             self.player_2_score += 1;
+                            self.ball = None;
                             creation_ball(self, buffer, cli)
                         } else {
                             self.ball = Some((ball.0 - 1, ball.1));
                         }
-                    } else if checker_second_pong == true {
+                    } else if checker_first_pong == true {
                         if ball_rebounce_direction == 0 {
                             self.ball_direction = BallDirection::East;
                         } else if ball_rebounce_direction == 1 {
@@ -264,16 +265,21 @@ impl World {
                 }
                 BallDirection::NorthWest => {
                     if buffer.get(ball.0 as isize - 1, ball.1 as isize - 1) != None
-                        && checker_second_pong == false
+                        && checker_first_pong == false
                     {
-                        self.ball = Some((ball.0 - 1, ball.1 - 1));
+                        if ball == &(0, ball.1) {
+                            self.player_2_score += 1;
+                            creation_ball(self, buffer, cli)
+                        } else {
+                            self.ball = Some((ball.0 - 1, ball.1 - 1));
+                        }
                     } else if ball.1 == 0
                         && buffer.get(ball.0 as isize - 1, ball.1 as isize + 1) != None
-                        && checker_second_pong == false
+                        && checker_first_pong == false
                     {
                         self.ball = Some((ball.0 - 1, ball.1 + 1));
                         self.ball_direction = BallDirection::SouthWest;
-                    } else if checker_second_pong == true {
+                    } else if checker_first_pong == true {
                         if ball_rebounce_direction == 0 {
                             self.ball_direction = BallDirection::East;
                         } else {
@@ -283,16 +289,21 @@ impl World {
                 }
                 BallDirection::SouthWest => {
                     if buffer.get(ball.0 as isize - 1, ball.1 as isize + 1) != None
-                        && checker_second_pong == false
+                        && checker_first_pong == false
                     {
-                        self.ball = Some((ball.0 - 1, ball.1 + 1));
+                        if ball == &(0, ball.1) {
+                            self.player_2_score += 1;
+                            creation_ball(self, buffer, cli)
+                        } else {
+                            self.ball = Some((ball.0 - 1, ball.1 + 1));
+                        }
                     } else if ball.1 == buffer.height() - 1
                         && buffer.get(ball.0 as isize - 1, ball.1 as isize - 1) != None
-                        && checker_second_pong == false
+                        && checker_first_pong == false
                     {
                         self.ball = Some((ball.0 - 1, ball.1 - 1));
                         self.ball_direction = BallDirection::NorthWest;
-                    } else if checker_second_pong == true {
+                    } else if checker_first_pong == true {
                         if ball_rebounce_direction == 0 {
                             self.ball_direction = BallDirection::East;
                         } else {
@@ -304,7 +315,13 @@ impl World {
                     if buffer.get(ball.0 as isize + 1, ball.1 as isize) != None
                         && checker_second_pong == false
                     {
-                        self.ball = Some((ball.0 + 1, ball.1));
+                        if ball == &(buffer.width() - 1, ball.1) {
+                        self.player_1_score += 1;
+                        self.ball = None;
+                        creation_ball(self, buffer, cli)
+                        } else {
+                            self.ball = Some((ball.0 + 1, ball.1));
+                        }
                     } else if checker_second_pong == true {
                         if ball_rebounce_direction == 0 {
                             self.ball_direction = BallDirection::West;
@@ -313,16 +330,18 @@ impl World {
                         } else {
                             self.ball_direction = BallDirection::SouthWest;
                         }
-                    } else if ball == &(buffer.width() - 1, ball.1) {
-                        self.player_1_score += 1;
-                        creation_ball(self, buffer, cli)
                     }
                 }
                 BallDirection::NorthEast => {
                     if buffer.get(ball.0 as isize + 1, ball.1 as isize - 1) != None
                         && checker_second_pong == false
                     {
-                        self.ball = Some((ball.0 + 1, ball.1 - 1));
+                        if ball == &(buffer.width() - 1, ball.1) {
+                        self.player_1_score += 1;
+                        creation_ball(self, buffer, cli)
+                        } else {
+                            self.ball = Some((ball.0 + 1, ball.1 - 1));
+                        }
                     } else if ball.1 == 0
                         && buffer.get(ball.0 as isize + 1, ball.1 as isize + 1) != None
                         && checker_second_pong == false
@@ -342,7 +361,12 @@ impl World {
                     if buffer.get(ball.0 as isize + 1, ball.1 as isize + 1) != None
                         && checker_second_pong == false
                     {
-                        self.ball = Some((ball.0 + 1, ball.1 + 1));
+                        if ball == &(buffer.width() - 1, ball.1) {
+                        self.player_1_score += 1;
+                        creation_ball(self, buffer, cli)
+                        } else {
+                            self.ball = Some((ball.0 + 1, ball.1 + 1));
+                        }
                     } else if ball.1 == buffer.height() - 1
                         && buffer.get(ball.0 as isize + 1, ball.1 as isize - 1) != None
                         && checker_second_pong == false
@@ -380,8 +404,9 @@ impl World {
         }
     }
 
-    pub fn update(&mut self, buffer: &mut WindowBuffer) {
+    pub fn update(&mut self, buffer: &mut WindowBuffer , cli: &Cli) {
         if self.space_count % 2 == 0 {
+            self.ball_movement(buffer, cli);
             self.pong_1_direction(buffer);
             self.pong_2_direction(buffer);
         }
