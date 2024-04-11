@@ -368,7 +368,6 @@ impl World {
                         creation_ball(self, buffer, cli);
                     }
                 }
-
                 BallDirection::Launch => {
                     if left_or_right == 0 {
                         if buffer.get(ball.0 as isize - 1, ball.1 as isize) != None
@@ -407,7 +406,7 @@ pub fn creation_ball(world: &mut World, buffer: &WindowBuffer, cli: &Cli) {
     if world.player_1_score < cli.number_of_points_to_reach
         || world.player_2_score < cli.number_of_points_to_reach
     {
-        world.ball = Some((buffer.height() / 2, buffer.width() / 2));
+        world.ball = Some((buffer.width() / 2, buffer.height() / 2));
         world.ball_direction = BallDirection::Still;
     } else {
         println!(
