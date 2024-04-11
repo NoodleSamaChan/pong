@@ -1,10 +1,10 @@
-use std::time::{Duration, Instant};
-use window_rs::WindowBuffer;
-use minifb::{Key, KeyRepeat, Window, WindowOptions};
 use clap::{Parser, ValueEnum};
+use minifb::{Key, KeyRepeat, Window, WindowOptions};
 use pong::{creation_pongs, display, World};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
+use std::time::{Duration, Instant};
+use window_rs::WindowBuffer;
 
 fn main() -> std::io::Result<()> {
     let cli = pong::Cli::parse();
@@ -38,7 +38,7 @@ fn main() -> std::io::Result<()> {
         false,
         Instant::now(),
         0,
-        cli.ball_speed, 
+        cli.ball_speed,
         StdRng::seed_from_u64(75),
     );
 
@@ -46,15 +46,16 @@ fn main() -> std::io::Result<()> {
     creation_pongs(&mut game_elements, &buffer);
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        while game_elements.player_1_score <= cli.number_of_points_to_reach || game_elements.player_2_score <= cli.number_of_points_to_reach {
-            let _ = game_elements.handle_user_input(&window,  &buffer);
+        while game_elements.player_1_score <= cli.number_of_points_to_reach
+            || game_elements.player_2_score <= cli.number_of_points_to_reach
+        {
+            let _ = game_elements.handle_user_input(&window, &buffer);
             game_elements.update(&mut buffer, &cli);
             display(&game_elements, &mut buffer);
 
             window
                 .update_with_buffer(&buffer.buffer(), buffer.width(), buffer.height())
                 .unwrap();
-
         }
     }
     Ok(())
