@@ -46,8 +46,7 @@ fn main() -> std::io::Result<()> {
     creation_pongs(&mut game_elements, &buffer);
 
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        while game_elements.player_1_score <= cli.number_of_points_to_reach
-            || game_elements.player_2_score <= cli.number_of_points_to_reach
+        while game_elements.finished == false
         {
             let _ = game_elements.handle_user_input(&window, &buffer);
             game_elements.update(&mut buffer, &cli);
@@ -57,6 +56,12 @@ fn main() -> std::io::Result<()> {
                 .update_with_buffer(&buffer.buffer(), buffer.width(), buffer.height())
                 .unwrap();
         }
+
+        println!(
+            "Game over! Score player 1 is {}, score player 2 is {}",
+            game_elements.player_1_score, game_elements.player_2_score
+        );
+
     }
     Ok(())
 }

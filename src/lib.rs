@@ -88,7 +88,7 @@ pub struct World {
     pub player_2_direction: Direction,
     ball: Option<(usize, usize)>,
     ball_direction: BallDirection,
-    finished: bool,
+    pub finished: bool,
     small_break_timer: Instant,
     space_count: usize,
     game_speed: usize,
@@ -408,7 +408,9 @@ pub fn creation_ball(world: &mut World, buffer: &WindowBuffer, cli: &Cli) {
     {
         world.ball = Some((buffer.width() / 2, buffer.height() / 2));
         world.ball_direction = BallDirection::Still;
+        println!("p1 points {} p2 points {}, status is {}", world.player_1_score, world.player_2_score, world.finished);
     } else {
+        world.finished = true;
         println!(
             "Game over! Score player 1 is {}, score player 2 is {}",
             world.player_1_score, world.player_2_score

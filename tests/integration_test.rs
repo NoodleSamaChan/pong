@@ -1,15 +1,15 @@
 #[cfg(test)]
 mod test {
     use super::*;
-    use pong::Cli;
-    use pong::{rgb, creation_pongs, World, display};
-    use insta::{assert_debug_snapshot, assert_snapshot};
-    use std::time::Instant;
     use clap::{Parser, ValueEnum};
-    use window_rs::WindowBuffer;
-    use rand::rngs::ThreadRng;
+    use insta::{assert_debug_snapshot, assert_snapshot};
+    use pong::Cli;
+    use pong::{creation_pongs, display, rgb, World};
     use rand::rngs::StdRng;
+    use rand::rngs::ThreadRng;
     use rand::SeedableRng;
+    use std::time::Instant;
+    use window_rs::WindowBuffer;
 
     #[test]
     fn test_rgb() {
@@ -23,19 +23,19 @@ mod test {
         let mut buffer: WindowBuffer = WindowBuffer::new(5, 20);
 
         let mut game_elements: World = pong::World::new(
-        Vec::new(),
-        Vec::new(),
-        0,
-        0,
-        pong::Direction::Still,
-        pong::Direction::Still,
-        Some((buffer.width() / 2, buffer.height() / 2)),
-        pong::BallDirection::Still,
-        false,
-        Instant::now(),
-        0,
-        120, 
-        StdRng::seed_from_u64(75),
+            Vec::new(),
+            Vec::new(),
+            0,
+            0,
+            pong::Direction::Still,
+            pong::Direction::Still,
+            Some((buffer.width() / 2, buffer.height() / 2)),
+            pong::BallDirection::Still,
+            false,
+            Instant::now(),
+            0,
+            120,
+            StdRng::seed_from_u64(75),
         );
 
         creation_pongs(&mut game_elements, &buffer);
@@ -66,7 +66,6 @@ mod test {
         .....
         "###
         );
-
     }
 
     #[test]
@@ -75,19 +74,19 @@ mod test {
         let mut buffer: WindowBuffer = WindowBuffer::new(5, 25);
 
         let mut game_elements: World = pong::World::new(
-        Vec::new(),
-        Vec::new(),
-        0,
-        0,
-        pong::Direction::Still,
-        pong::Direction::Still,
-        Some((buffer.width() / 2, buffer.height() / 2)),
-        pong::BallDirection::Still,
-        false,
-        Instant::now(),
-        0,
-        120, 
-        StdRng::seed_from_u64(75),
+            Vec::new(),
+            Vec::new(),
+            0,
+            0,
+            pong::Direction::Still,
+            pong::Direction::Still,
+            Some((buffer.width() / 2, buffer.height() / 2)),
+            pong::BallDirection::Still,
+            false,
+            Instant::now(),
+            0,
+            120,
+            StdRng::seed_from_u64(75),
         );
 
         creation_pongs(&mut game_elements, &buffer);
@@ -229,25 +228,25 @@ mod test {
         );
     }
 
-        #[test]
+    #[test]
     fn ball_launch_right() {
         let cli = pong::Cli::parse();
         let mut buffer: WindowBuffer = WindowBuffer::new(15, 10);
 
         let mut game_elements: World = pong::World::new(
-        Vec::new(),
-        Vec::new(),
-        0,
-        0,
-        pong::Direction::Still,
-        pong::Direction::Still,
-        Some((buffer.width() / 2, buffer.height() / 2)),
-        pong::BallDirection::Still,
-        false,
-        Instant::now(),
-        0,
-        120, 
-        StdRng::seed_from_u64(75),
+            Vec::new(),
+            Vec::new(),
+            0,
+            0,
+            pong::Direction::Still,
+            pong::Direction::Still,
+            Some((buffer.width() / 2, buffer.height() / 2)),
+            pong::BallDirection::Still,
+            false,
+            Instant::now(),
+            0,
+            120,
+            StdRng::seed_from_u64(75),
         );
 
         game_elements.ball_movement(&mut buffer, &cli);
@@ -325,7 +324,5 @@ mod test {
         ...............
         "###
         );
-
     }
-    
 }
