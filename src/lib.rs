@@ -129,6 +129,8 @@ impl World {
     }
 
     pub fn reset(&mut self, buffer: &WindowBuffer) {
+        self.player_1_pong = Vec::new();
+        self.player_2_pong = Vec::new();
         self.player_1_score = 0;
         self.player_2_score = 0;
         creation_pongs(self, buffer);
@@ -137,6 +139,7 @@ impl World {
         self.ball = Some((buffer.width() / 2, buffer.height() / 2));
         self.finished = false;
         self.space_count = self.space_count;
+        self.ball_direction = BallDirection::Still;
     }
 
     pub fn handle_user_input(
@@ -206,6 +209,7 @@ impl World {
                 self.player_1_pong = self.player_1_pong.clone();
             }
         }
+        self.player_1_direction = Direction::Still;
     }
 
     pub fn pong_2_direction(&mut self, buffer: &WindowBuffer) {
@@ -230,6 +234,7 @@ impl World {
                 self.player_2_pong = self.player_2_pong.clone();
             }
         }
+        self.player_2_direction = Direction::Still;
     }
 
     pub fn ball_movement(&mut self, buffer: &mut WindowBuffer, cli: &Cli) {
@@ -394,11 +399,21 @@ impl World {
         }
     }
 
-    pub fn update(&mut self, buffer: &mut WindowBuffer, cli: &Cli) {
+    pub fn update(&mut self, buffer: &mut WindowBuffer, cli: &Cli, pong_time: &mut Instant, ball_time: &mut Instant) {
+
+        let elapsed_time_ball = Duration::from_millis(20 as u64);
+        let elapsed_time_pongs = Duration::from_millis(5 as u64);
         if self.space_count % 2 == 0 {
-            self.ball_movement(buffer, cli);
-            self.pong_1_direction(buffer);
-            self.pong_2_direction(buffer);
+
+            if pong_time.elapsed() >= elapsed_time_pongs {
+                self.pong_1_direction(buffer);
+                self.pong_2_direction(buffer);
+                *pong_time = Instant::now();
+            }
+            if ball_time.elapsed() >= elapsed_time_ball {
+                self.ball_movement(buffer, cli);
+                *ball_time = Instant::now();
+            }   
         }
     }
 }
