@@ -165,7 +165,9 @@ impl World {
         }
 
         if window.is_key_pressed(Key::W, KeyRepeat::Yes) {
-            self.ball_direction = BallDirection::Launch
+            if self.ball_direction == BallDirection::Still {
+                self.ball_direction = BallDirection::Launch
+            }
         }
 
         let small_break = Duration::from_millis(0);
