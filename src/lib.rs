@@ -59,8 +59,6 @@ pub struct Cli {
     pub pong_speed: usize,
     #[arg(long, default_value_t = Difficulty::Medium)]
     pub difficulty: Difficulty,
-    #[arg(long, default_value_t = false)]
-    pub handicap: bool,
     #[arg(long, default_value_t = 10)]
     pub number_of_points_to_reach: usize,
 }
@@ -426,11 +424,10 @@ impl World {
 pub fn creation_ball(world: &mut World, buffer: &WindowBuffer, cli: &Cli) {
     world.ball = None;
     if world.player_1_score < cli.number_of_points_to_reach
-        || world.player_2_score < cli.number_of_points_to_reach
+        && world.player_2_score < cli.number_of_points_to_reach
     {
         world.ball = Some((buffer.width() / 2, buffer.height() / 2));
         world.ball_direction = BallDirection::Still;
-        println!("p1 points {} p2 points {}, status is {}, nb of points to reach is {}", world.player_1_score, world.player_2_score, world.finished, cli.number_of_points_to_reach);
     } else {
         world.finished = true;
         println!(
