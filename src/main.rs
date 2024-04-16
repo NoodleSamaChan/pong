@@ -38,6 +38,7 @@ fn main() -> std::io::Result<()> {
         false,
         Instant::now(),
         0,
+        cli.pong_speed,
         cli.ball_speed,
         StdRng::seed_from_u64(75),
     );

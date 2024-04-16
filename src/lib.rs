@@ -53,8 +53,10 @@ pub struct Cli {
 
     #[arg(long)]
     pub file_path: Option<String>,
-    #[arg(long, default_value_t = 120)]
+    #[arg(long, default_value_t = 20)]
     pub ball_speed: usize,
+    #[arg(long, default_value_t = 0)]
+    pub pong_speed: usize,
     #[arg(long, default_value_t = Difficulty::Medium)]
     pub difficulty: Difficulty,
     #[arg(long, default_value_t = false)]
@@ -91,7 +93,8 @@ pub struct World {
     pub finished: bool,
     small_break_timer: Instant,
     space_count: usize,
-    game_speed: usize,
+    pong_speed: usize,
+    ball_speed: usize,
     rng: StdRng,
 }
 
@@ -108,7 +111,8 @@ impl World {
         finished: bool,
         small_break_timer: Instant,
         space_count: usize,
-        game_speed: usize,
+        pong_speed: usize,
+    ball_speed: usize,
         rng: StdRng,
     ) -> Self {
         Self {
@@ -123,7 +127,8 @@ impl World {
             finished,
             small_break_timer,
             space_count,
-            game_speed,
+            pong_speed,
+            ball_speed,
             rng,
         }
     }
@@ -401,8 +406,8 @@ impl World {
 
     pub fn update(&mut self, buffer: &mut WindowBuffer, cli: &Cli, pong_time: &mut Instant, ball_time: &mut Instant) {
 
-        let elapsed_time_ball = Duration::from_millis(20 as u64);
-        let elapsed_time_pongs = Duration::from_millis(5 as u64);
+        let elapsed_time_ball = Duration::from_millis(cli.ball_speed as u64);
+        let elapsed_time_pongs = Duration::from_millis(cli.pong_speed as u64);
         if self.space_count % 2 == 0 {
 
             if pong_time.elapsed() >= elapsed_time_pongs {
@@ -425,13 +430,14 @@ pub fn creation_ball(world: &mut World, buffer: &WindowBuffer, cli: &Cli) {
     {
         world.ball = Some((buffer.width() / 2, buffer.height() / 2));
         world.ball_direction = BallDirection::Still;
-        println!("p1 points {} p2 points {}, status is {}", world.player_1_score, world.player_2_score, world.finished);
+        println!("p1 points {} p2 points {}, status is {}, nb of points to reach is {}", world.player_1_score, world.player_2_score, world.finished, cli.number_of_points_to_reach);
     } else {
         world.finished = true;
         println!(
             "Game over! Score player 1 is {}, score player 2 is {}",
             world.player_1_score, world.player_2_score
         );
+        world.reset(&buffer);
     }
 }
 
