@@ -468,12 +468,20 @@ pub fn display(world: &World, buffer: &mut WindowBuffer) {
             if (world.player_1_score as isize - world.player_2_score as isize == 2)
                 || (world.player_1_score as isize - world.player_2_score as isize == (-2))
             {
-                buffer[*ball] = rgb(100, 100, 0);
-            } else if (world.player_1_score as isize - world.player_2_score as isize >= 4)
-                || (world.player_1_score as isize - world.player_2_score as isize <= (-4))
+                buffer[*ball] = rgb(200, 80, 80);
+            } else if (world.player_1_score as isize - world.player_2_score as isize == 3)
+                || (world.player_1_score as isize - world.player_2_score as isize == (-3))
             {
-                buffer[*ball] = rgb(75, 75, 75);
-            }
+                buffer[*ball] = rgb(150, 100, 100);
+            } else if (world.player_1_score as isize - world.player_2_score as isize == 4)
+                || (world.player_1_score as isize - world.player_2_score as isize == (-4))
+            {
+                buffer[*ball] = rgb(150, 150, 150);
+            } else if (world.player_1_score as isize - world.player_2_score as isize >= 5)
+                || (world.player_1_score as isize - world.player_2_score as isize <= (-5))
+            {
+                buffer[*ball] = rgb(200, 200, 200);
+            } 
         }
     }
 }
