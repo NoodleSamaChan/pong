@@ -1,5 +1,4 @@
 use clap::{Parser, ValueEnum};
-use minifb::{Key, KeyRepeat, Window};
 use rand::rngs::StdRng;
 use rand::Rng;
 use std::fmt;
@@ -7,6 +6,7 @@ use std::fs::File;
 use std::io::{Read, Write};
 use std::time::{Duration, Instant};
 use window_rs::WindowBuffer;
+use graphic::{Graphic, Key};
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug, Default)]
 pub enum Difficulty {
@@ -145,32 +145,32 @@ impl World {
         self.ball_direction = BallDirection::Still;
     }
 
-    pub fn handle_user_input(
+    pub fn handle_user_input <W: Graphic>(
         &mut self,
-        window: &Window,
+        window: &W,
         buffer: &WindowBuffer,
     ) -> std::io::Result<()> {
-        if window.is_key_pressed(Key::Q, KeyRepeat::No) {
+        if window.is_key_pressed(Key::Q) {
             self.reset(buffer);
         }
 
-        if window.is_key_pressed(Key::E, KeyRepeat::Yes) {
+        if window.is_key_pressed(Key::UpPlayer1) {
             self.player_1_direction = Direction::North;
         }
 
-        if window.is_key_pressed(Key::D, KeyRepeat::Yes) {
+        if window.is_key_pressed(Key::DownPlayer1) {
             self.player_1_direction = Direction::South;
         }
 
-        if window.is_key_pressed(Key::O, KeyRepeat::Yes) {
+        if window.is_key_pressed(Key::UpPlayer2) {
             self.player_2_direction = Direction::North;
         }
 
-        if window.is_key_pressed(Key::K, KeyRepeat::Yes) {
+        if window.is_key_pressed(Key::DownPlayer2) {
             self.player_2_direction = Direction::South;
         }
 
-        if window.is_key_pressed(Key::W, KeyRepeat::Yes) {
+        if window.is_key_pressed(Key::W) {
             if self.ball_direction == BallDirection::Still {
                 self.ball_direction = BallDirection::Launch
             }
