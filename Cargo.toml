@@ -10,7 +10,7 @@ clap = { version = "4.5.2", features = ["derive"] }
 minifb = "0.25.0"
 rand = "0.8.5"
 window_rs = {git = "https://github.com/NoodleSamaChan/window_rs"}
-graphic = {git = "https://github.com/NoodleSamaChan/graphic.git", rev = "b8f856f"}
+graphic = {git = "https://github.com/NoodleSamaChan/graphic.git", rev = "2d93ccf"}
 
 [dev-dependencies]
 insta = "1.38.0"

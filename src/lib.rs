@@ -150,7 +150,7 @@ impl World {
         window: &W,
         buffer: &WindowBuffer,
     ) -> std::io::Result<()> {
-        if window.is_key_pressed(Key::Q) {
+        if window.is_key_pressed(Key::Quit) {
             self.reset(buffer);
         }
 
@@ -170,7 +170,7 @@ impl World {
             self.player_2_direction = Direction::South;
         }
 
-        if window.is_key_pressed(Key::W) {
+        if window.is_key_pressed(Key::Launch) {
             if self.ball_direction == BallDirection::Still {
                 self.ball_direction = BallDirection::Launch
             }
@@ -179,7 +179,7 @@ impl World {
         let small_break = Duration::from_millis(0);
         if self.small_break_timer.elapsed() >= small_break {
             window.get_keys_released().iter().for_each(|key| match key {
-                Key::Space => self.space_count += 1,
+                Some(graphic::Key::Space) => self.space_count += 1,
                 _ => (),
             });
             self.small_break_timer = Instant::now();
