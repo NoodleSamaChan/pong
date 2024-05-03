@@ -312,7 +312,7 @@ dependencies = [
 [[package]]
 name = "graphic"
 version = "0.1.0"
-source = "git+https://github.com/NoodleSamaChan/graphic.git?rev=2d93ccf#2d93ccf90f15bc091c0a0ff6e5ed3da8603ad15b"
+source = "git+https://github.com/NoodleSamaChan/graphic.git?rev=a1975dc#a1975dc577abd480fcfca98788a96d92e3bc7465"
 dependencies = [
  "minifb",
  "window_rs",

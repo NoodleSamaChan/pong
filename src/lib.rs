@@ -179,7 +179,7 @@ impl World {
         let small_break = Duration::from_millis(0);
         if self.small_break_timer.elapsed() >= small_break {
             window.get_keys_released().iter().for_each(|key| match key {
-                Some(graphic::Key::Space) => self.space_count += 1,
+                graphic::Key::Space => self.space_count += 1,
                 _ => (),
             });
             self.small_break_timer = Instant::now();
