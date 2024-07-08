@@ -10,7 +10,7 @@ use graphic::{minifb::Minifb, Graphic};
 fn main() -> std::io::Result<()> {
     let cli = pong::Cli::parse();
 
-    let mut buffer: WindowBuffer = WindowBuffer::new(140, 110);
+    let mut buffer: WindowBuffer = WindowBuffer::new(90, 60);
 
     let mut window = Minifb::new("Pong - ESC to exit", buffer.width(), buffer.height());
 
