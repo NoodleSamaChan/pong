@@ -51,8 +51,8 @@ impl fmt::Display for Difficulty {
 pub struct Cli {
     /// Optional name to operate on
 
-    #[arg(long)]
-    pub file_path: Option<String>,
+    //#[arg(long)]
+    //pub file_path: Option<String>,
     #[arg(long, default_value_t = 20)]
     pub ball_speed: usize,
     #[arg(long, default_value_t = 0)]
