@@ -12,6 +12,9 @@ rand = "0.8.5"
 window_rs = {git = "https://github.com/NoodleSamaChan/window_rs", rev = "6068419"}
 graphic = {git = "https://github.com/NoodleSamaChan/graphic.git", rev = "4cf1ea4", default-features = false}
 
+[features]
+default = ["graphic/minifb"]
+
 [dev-dependencies]
 insta = "1.38.0"
 proptest = "1.4.0"
