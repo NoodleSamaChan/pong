@@ -189,7 +189,7 @@ impl World {
     }
 
     pub fn pong_1_direction(&mut self, buffer: &WindowBuffer) {
-        let top = self.player_1_pong[self.player_1_pong.len() - 1];
+        let top = self.player_1_pong[self.player_1_pong.len() - 2];
         let bottom = self.player_1_pong[0];
         match self.player_1_direction {
             Direction::North => {
@@ -216,7 +216,7 @@ impl World {
     }
 
     pub fn pong_2_direction(&mut self, buffer: &WindowBuffer) {
-        let top = self.player_2_pong[self.player_2_pong.len() - 1];
+        let top = self.player_2_pong[self.player_2_pong.len() - 2];
         let bottom = self.player_2_pong[0];
         match self.player_2_direction {
             Direction::North => {
