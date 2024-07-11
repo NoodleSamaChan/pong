@@ -439,9 +439,9 @@ pub fn creation_ball(world: &mut World, buffer: &WindowBuffer, cli: &Cli) {
 }
 
 pub fn creation_pongs(world: &mut World, buffer: &WindowBuffer) {
-    let y_middle_point = buffer.height() / 3;
+    let y_middle_point = buffer.height() / 2;
 
-    for x in 0..10 {
+    for x in 0..5 {
         world.player_1_pong.push((0, y_middle_point - x));
         world
             .player_2_pong
