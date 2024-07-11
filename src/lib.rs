@@ -110,7 +110,7 @@ impl World {
         small_break_timer: Instant,
         space_count: usize,
         pong_speed: usize,
-    ball_speed: usize,
+        ball_speed: usize,
         rng: StdRng,
     ) -> Self {
         Self {
@@ -405,7 +405,7 @@ impl World {
     pub fn update(&mut self, buffer: &mut WindowBuffer, cli: &Cli, pong_time: &mut Instant, ball_time: &mut Instant) {
 
         let elapsed_time_ball = Duration::from_millis(cli.ball_speed as u64);
-        let elapsed_time_pongs = Duration::from_millis(cli.pong_speed as u64);
+        let elapsed_time_pongs = Duration::from_micros(cli.pong_speed as u64);
         if self.space_count % 2 == 0 {
 
             if pong_time.elapsed() >= elapsed_time_pongs {
