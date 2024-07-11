@@ -94,9 +94,9 @@ pub struct World {
     pong_speed: usize,
     ball_speed: usize,
     rng: StdRng,
-    player_1_colour: u32,
-    player_2_colour: u32,
-    ball_colour: u32,
+    pub player_1_colour: u32,
+    pub player_2_colour: u32,
+    pub ball_colour: u32,
 }
 
 impl World {
