@@ -55,7 +55,7 @@ pub struct Cli {
     //pub file_path: Option<String>,
     #[arg(long, default_value_t = 20)]
     pub ball_speed: usize,
-    #[arg(long, default_value_t = 20)]
+    #[arg(long, default_value_t = 0)]
     pub pong_speed: usize,
     #[arg(long, default_value_t = Difficulty::Medium)]
     pub difficulty: Difficulty,
