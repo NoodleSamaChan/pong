@@ -193,7 +193,7 @@ impl World {
         let bottom = self.player_1_pong[0];
         match self.player_1_direction {
             Direction::North => {
-                if buffer.get(top.0 as isize, top.1 as isize - 3) != None {
+                if buffer.get(top.0 as isize, top.1 as isize - 2) != None {
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
                     self.player_1_direction = Direction::Still;
@@ -201,7 +201,7 @@ impl World {
                 }
             }
             Direction::South => {
-                if buffer.get(bottom.0 as isize, bottom.1 as isize + 3) != None {
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 2) != None {
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
                     self.player_1_direction = Direction::Still;
@@ -220,14 +220,14 @@ impl World {
         let bottom = self.player_2_pong[0];
         match self.player_2_direction {
             Direction::North => {
-                if buffer.get(top.0 as isize, top.1 as isize - 3) != None {
+                if buffer.get(top.0 as isize, top.1 as isize - 2) != None {
                     self.player_2_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
                     self.player_2_pong = self.player_2_pong.clone();
                 }
             }
             Direction::South => {
-                if buffer.get(bottom.0 as isize, bottom.1 as isize + 3) != None {
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 2) != None {
                     self.player_2_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
                     self.player_2_pong = self.player_2_pong.clone();
