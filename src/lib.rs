@@ -94,6 +94,9 @@ pub struct World {
     pong_speed: usize,
     ball_speed: usize,
     rng: StdRng,
+    player_1_colour: u32,
+    player_2_colour: u32,
+    ball_colour: u32,
 }
 
 impl World {
@@ -112,6 +115,9 @@ impl World {
         pong_speed: usize,
         ball_speed: usize,
         rng: StdRng,
+        player_1_colour: u32,
+        player_2_colour: u32,
+        ball_colour: u32,
     ) -> Self {
         Self {
             player_1_pong,
@@ -128,6 +134,9 @@ impl World {
             pong_speed,
             ball_speed,
             rng,
+            player_1_colour,
+            player_2_colour,
+            ball_colour,
         }
     }
 
@@ -454,16 +463,16 @@ pub fn display(world: &World, buffer: &mut WindowBuffer) {
     world
         .player_1_pong
         .iter()
-        .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = rgb(0, 0, u8::MAX));
+        .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = world.player_1_colour);
 
     world
         .player_2_pong
         .iter()
-        .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = rgb(0, u8::MAX, 0));
+        .for_each(|(x, y)| buffer[(x.clone(), y.clone())] = world.player_2_colour);
 
     if world.ball != None {
         if let Some(ball) = &world.ball {
-            buffer[*ball] = rgb(u8::MAX, 0, 0);
+            buffer[*ball] = world.ball_colour;
 
             if (world.player_1_score as isize - world.player_2_score as isize == 2)
                 || (world.player_1_score as isize - world.player_2_score as isize == (-2))

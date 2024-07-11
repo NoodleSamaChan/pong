@@ -1,6 +1,6 @@
 use clap::{Parser, ValueEnum};
 use minifb::{Key, KeyRepeat, Window, WindowOptions};
-use pong::{creation_pongs, display, World};
+use pong::{creation_pongs, display, rgb, World};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 use std::time::{Duration, Instant};
@@ -29,6 +29,9 @@ fn main() -> std::io::Result<()> {
         cli.pong_speed,
         cli.ball_speed,
         StdRng::seed_from_u64(75),
+        rgb(0, 0, u8::MAX),
+        rgb(0, u8::MAX, 0),
+        rgb(u8::MAX, 0, 0),
     );
 
     let mut instant_ball = Instant::now();
