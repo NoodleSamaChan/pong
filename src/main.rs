@@ -41,7 +41,6 @@ fn main() -> std::io::Result<()> {
             let _ = game_elements.handle_user_input(&window, &buffer);
             game_elements.update(&mut buffer, &cli, &mut instant_pong, &mut instant_ball);
             display(&game_elements, &mut buffer);
-            println!("{:#?}", game_elements.player_2_pong);
 
             window
                 .update_with_buffer(&buffer)
