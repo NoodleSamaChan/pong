@@ -80,8 +80,8 @@ pub fn rgb(red: u8, green: u8, blue: u8) -> u32 {
 //COLOURS MANAGEMENT END
 
 pub struct World {
-    player_1_pong: Vec<(usize, usize)>,
-    player_2_pong: Vec<(usize, usize)>,
+    pub player_1_pong: Vec<(usize, usize)>,
+    pub player_2_pong: Vec<(usize, usize)>,
     pub player_1_score: usize,
     pub player_2_score: usize,
     pub player_1_direction: Direction,
