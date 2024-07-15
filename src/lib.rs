@@ -160,27 +160,27 @@ impl World {
         window: &W,
         buffer: &WindowBuffer,
     ) -> std::io::Result<()> {
-        if window.is_key_pressed(Key::Quit) {
+        if window.is_key_down(Key::Quit) {
             self.reset(buffer);
         }
 
-        if window.is_key_pressed(Key::UpPlayer1) {
+        if window.is_key_down(Key::UpPlayer1) {
             self.player_1_direction = Direction::North;
         }
 
-        if window.is_key_pressed(Key::DownPlayer1) {
+        if window.is_key_down(Key::DownPlayer1) {
             self.player_1_direction = Direction::South;
         }
 
-        if window.is_key_pressed(Key::UpPlayer2) {
+        if window.is_key_down(Key::UpPlayer2) {
             self.player_2_direction = Direction::North;
         }
 
-        if window.is_key_pressed(Key::DownPlayer2) {
+        if window.is_key_down(Key::DownPlayer2) {
             self.player_2_direction = Direction::South;
         }
 
-        if window.is_key_pressed(Key::Launch) {
+        if window.is_key_down(Key::Launch) {
             if self.ball_direction == BallDirection::Still {
                 self.ball_direction = BallDirection::Launch
             }
@@ -203,7 +203,7 @@ impl World {
         let bottom = self.player_1_pong[0];
         match self.player_1_direction {
             Direction::North => {
-                if buffer.get(top.0 as isize, top.1 as isize - 2) != None {
+                if buffer.get(top.0 as isize, top.1 as isize - 1) != None {
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
                     self.player_1_direction = Direction::Still;
@@ -211,7 +211,7 @@ impl World {
                 }
             }
             Direction::South => {
-                if buffer.get(bottom.0 as isize, bottom.1 as isize + 2) != None {
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None {
                     self.player_1_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
                     self.player_1_direction = Direction::Still;
@@ -230,14 +230,14 @@ impl World {
         let bottom = self.player_2_pong[0];
         match self.player_2_direction {
             Direction::North => {
-                if buffer.get(top.0 as isize, top.1 as isize - 2) != None {
+                if buffer.get(top.0 as isize, top.1 as isize - 1) != None {
                     self.player_2_pong.iter_mut().for_each(|(x, y)| *y -= 1);
                 } else {
                     self.player_2_pong = self.player_2_pong.clone();
                 }
             }
             Direction::South => {
-                if buffer.get(bottom.0 as isize, bottom.1 as isize + 2) != None {
+                if buffer.get(bottom.0 as isize, bottom.1 as isize + 1) != None {
                     self.player_2_pong.iter_mut().for_each(|(x, y)| *y += 1);
                 } else {
                     self.player_2_pong = self.player_2_pong.clone();
@@ -420,7 +420,6 @@ impl World {
 
             if pong_time.elapsed() >= elapsed_time_pongs {
                 self.pong_1_direction(buffer);
-                println!("updated after {:#?}", pong_time.elapsed());
                 self.pong_2_direction(buffer);
                 *pong_time = Instant::now();
             }
