@@ -8,6 +8,7 @@ use std::time::{Duration, Instant};
 use window_rs::WindowBuffer;
 use graphic::{Graphic, Key};
 
+
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug, Default)]
 pub enum Difficulty {
     Easy,

@@ -3,9 +3,9 @@ use minifb::{Key, KeyRepeat, Window, WindowOptions};
 use pong::{creation_pongs, display, rgb, World};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
-use std::time::{Duration, Instant};
 use window_rs::WindowBuffer;
 use graphic::{minifb::Minifb, Graphic};
+use web_time::Instant;
 
 fn main() -> std::io::Result<()> {
     let cli = pong::Cli::parse();
