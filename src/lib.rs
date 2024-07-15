@@ -420,6 +420,7 @@ impl World {
 
             if pong_time.elapsed() >= elapsed_time_pongs {
                 self.pong_1_direction(buffer);
+                println!("updated after {:#?}", pong_time.elapsed());
                 self.pong_2_direction(buffer);
                 *pong_time = Instant::now();
             }
