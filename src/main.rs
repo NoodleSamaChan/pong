@@ -1,6 +1,5 @@
-use clap::{Parser, ValueEnum};
-use minifb::{Key, KeyRepeat, Window, WindowOptions};
-use pong::{creation_pongs, display, rgb, World};
+use clap::Parser;
+use pong::{creation_pongs, display, World};
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 use window_rs::WindowBuffer;

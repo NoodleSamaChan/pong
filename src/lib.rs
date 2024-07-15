@@ -4,7 +4,7 @@ use rand::Rng;
 use std::fmt;
 use std::fs::File;
 use std::io::{Read, Write};
-use std::time::{Duration, Instant};
+use web_time::{Duration, Instant};
 use window_rs::WindowBuffer;
 use graphic::{Graphic, Key};
 
