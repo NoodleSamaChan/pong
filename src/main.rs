@@ -28,7 +28,7 @@ fn main() -> std::io::Result<()> {
         cli.pong_speed,
         cli.ball_speed,
         StdRng::seed_from_u64(75),
-        0xFFFF0000,
+        0xfe2d00,
         0xFF00FF00,
         0xFFFFFF00,
     );
