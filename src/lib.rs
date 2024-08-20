@@ -2,8 +2,6 @@ use clap::{Parser, ValueEnum};
 use rand::rngs::StdRng;
 use rand::Rng;
 use std::fmt;
-use std::fs::File;
-use std::io::{Read, Write};
 use web_time::{Duration, Instant};
 use window_rs::WindowBuffer;
 use graphic::{Graphic, Key};
